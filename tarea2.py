@@ -31,6 +31,8 @@ class Graph:
     def add_edge(self, u, v, capacity):
         self.capacity_matrix[u][v] = capacity
         
+
+
 def bfs(n, s, t, graph):
     """
     Perform Breadth-First Search (BFS) to find augmenting paths in the residual graph.
@@ -104,6 +106,8 @@ def read_input_file(filename):
             if not line:
                 break
             u, v, capacity = map(int, line.split())
+            if capacity_matrix[u][v] != 0:
+                raise ValueError("Doble aristas entre los nodos {} y {}".format(u, v))
             capacity_matrix[u][v] = capacity
         return n, capacity_matrix
 
@@ -135,7 +139,7 @@ def visualize_graph(graph, flow_matrix, source, sink):
                 G.add_edge(u, v, capacity=capacity, flow=flow)
 
     k_value = 0.4  # Adjust this value for desired node spacing
-    pos = nx.spring_layout(G, pos={source: (-k_value, 0), sink: (k_value, 0)}, fixed=[source, sink], k=k_value)
+    pos = nx.spring_layout(G, pos={source: (-k_value, 0), sink: (k_value, 0)}, fixed=[source, sink], k=k_value, seed=43)
     labels = {(u, v): f"{flow}/{capacity}" for u, v, data in G.edges(data=True) for flow, capacity in [(data['flow'], data['capacity'])]}
     nx.draw_networkx_nodes(G, pos)
     nx.draw_networkx_edges(G, pos)
